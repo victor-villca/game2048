@@ -5,7 +5,7 @@ import Graphics.Gloss
 import Game
 import Data.Array
 
-boardGridColor = makeColorI 255 255 255 255 
+boardGridColor = makeColorI 0 0 0 255 
 tieColor = greyN 0.5
 
 -- | Convierte el tablero en una imagen en funcionamiento.
