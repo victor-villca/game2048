@@ -1,37 +1,40 @@
 module Rendering where
 
 import Graphics.Gloss
-
 import Game
 import Data.Array
+import Utils
 
+-- GRID DRAWING
+boardGridColor :: Color
 boardGridColor = makeColorI 0 0 0 255 
-tieColor = greyN 0.5
 
--- | Convierte el tablero en una imagen en funcionamiento.
-boardAsRunningPicture :: Board   -- ^ El tablero del juego.
-                      -> Picture -- ^ La imagen del tablero.
-boardAsRunningPicture board = 
-    pictures [ color boardGridColor $ boardGrid]
-
-
--- | Genera el diseño del tablero con líneas que forman las celdas.
 boardGrid :: Picture
-boardGrid = 
-    pictures
-    $ concatMap (\i -> [ line [(i * cellWidth, 0.0)
-                              ,(i * cellWidth, fromIntegral screenHeight)]
-                        ,line [(0.0,i * cellHeight)
-                              ,(fromIntegral screenWidth, i * cellHeight)]])
-    [0.0  .. fromIntegral n]
+boardGrid = pictures $ concatMap drawLines [0.0 .. fromIntegral n]
+  where
+    drawLines i = [ line [(i * cellWidth, 0.0), (i * cellWidth, fromIntegral screenHeight)]
+                  , line [(0.0, i * cellHeight), (fromIntegral screenWidth, i * cellHeight)]]
 
--- | Genera la imagen del juego
+-- CELL DRAWING
+cellToPicture :: Cell -> Picture
+cellToPicture Empty = Blank
+cellToPicture (Ocuppied val) = numberToPicture val
+
+drawCell :: (Int, Int) -> Cell -> Picture
+drawCell (x, y) Empty = blank
+drawCell (x, y) (Ocuppied value) = pictures [ coloredRectangle, translatedText ]
+  where
+    coloredRectangle = translate (fromIntegral x * cellWidth + cellWidth / 2) (fromIntegral y * cellHeight + cellHeight / 2) $ color red $ rectangleSolid cellWidth cellHeight
+    translatedText = translate (fromIntegral x * cellWidth + cellWidth / 2 -20) (fromIntegral y * cellHeight + cellHeight / 2 - 20) $ scale 0.5 0.5 $ boldText 1.4 $ color white $ text (show value)
+
+
+-- BOARD DRAWING
+boardAsRunningPicture :: Board -> Picture
+boardAsRunningPicture board = pictures [ color boardGridColor boardGrid, cellsPictures ]
+  where
+    cellsPictures = pictures [ drawCell (x, y) cell | x <- [0..n-1], y <- [0..n-1], let cell = board ! (x, y) ]
+
 gameAsPicture :: Game -> Picture
-gameAsPicture game = translate (fromIntegral screenWidth * (-0.5))
-                               (fromIntegral screenHeight * (-0.5))
-                               frame
-    where frame  = case gameState game of
-            Running -> boardAsRunningPicture (gameBoard game)
-            --implementar despues
-            GameOver -> boardAsRunningPicture (gameBoard game)
-    
+gameAsPicture game = translate (fromIntegral screenWidth * (-0.5)) (fromIntegral screenHeight * (-0.5)) frame
+  where
+    frame = boardAsRunningPicture $ gameBoard game
