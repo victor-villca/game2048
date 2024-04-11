@@ -32,7 +32,7 @@ generateNumber = do
 initializeBoard :: Board -> IO Board
 initializeBoard board = do
     -------
-    emptyCells <- getEmptyCells board
+    emptyCells <- pure $ getEmptyCells board
     let [index1, index2] = take 2 emptyCells
     -------
     number1 <- generateNumber
