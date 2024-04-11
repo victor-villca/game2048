@@ -1,2 +1,6 @@
+import Test.HUnit (runTestTT)
+
+import LogicSpec (tests)
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = runTestTT tests >> return ()

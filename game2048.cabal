@@ -25,7 +25,9 @@ source-repository head
 
 library
   exposed-modules:
+      Game
       Lib
+      Logic
   other-modules:
       Paths_game2048
   autogen-modules:
@@ -57,6 +59,7 @@ test-suite game2048-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      LogicSpec
       Paths_game2048
   autogen-modules:
       Paths_game2048
