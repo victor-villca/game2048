@@ -15,25 +15,6 @@ boardAsRunningPicture board =
     pictures [ color boardGridColor $ boardGrid]
 
 
--- | Posiciona una imagen en una celda específica del tablero.
-snapPicturetoCell :: Picture       -- ^ La imagen que se posicionará.
-                  -> (Int, Int)   -- ^ Coordenadas (fila, columna) de la celda.
-                  -> Picture       -- ^ La imagen posicionada en la celda.
-snapPicturetoCell picture (row, colum) = translate x y picture
-        where x = fromIntegral colum * cellWidth + cellWidth * 0.5
-              y = fromIntegral row * cellWidth + cellWidth * 0.5
-
--- | Renderiza las celdas del tablero según su contenido.
-celllsOfBoard :: Board    -- ^ El tablero del juego.
-              -> Cell     -- ^ El contenido de la celda a renderizar.
-              -> Picture  -- ^ La imagen de las celdas renderizadas.
-              -> Picture
-celllsOfBoard board cell cellPicture = 
-    pictures 
-    $ map (snapPicturetoCell cellPicture . fst)
-    $ filter (\(_,e) -> e == cell)
-    $ assocs board
-
 -- | Genera el diseño del tablero con líneas que forman las celdas.
 boardGrid :: Picture
 boardGrid = 
