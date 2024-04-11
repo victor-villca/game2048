@@ -1,4 +1,6 @@
-import LogicSpec
+import Test.HUnit (runTestTT)
+
+import LogicSpec (tests)
 
 main :: IO ()
-main = mainLogic
+main = runTestTT tests >> return ()

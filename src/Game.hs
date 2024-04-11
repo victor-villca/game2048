@@ -5,7 +5,7 @@ import Data.Array
 
 data State = Running | GameOver deriving (Eq)
 
-data Cell = Empty | Ocuppied Int deriving (Eq)
+data Cell = Empty | Ocuppied Int deriving (Eq,Show)
 
 type Board = Array (Int, Int) Cell 
 
