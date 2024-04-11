@@ -1,5 +1,6 @@
 module Logic where
 
+import Data.Array
 import Game
 import System.Random
 
