@@ -15,3 +15,15 @@ data Game = Game {gameBoard :: Board,
 
 n :: Int 
 n = 4
+
+screenWidth :: Int
+screenWidth = 640
+
+screenHeight :: Int 
+screenHeight = 480
+
+cellWidth :: Float
+cellWidth = fromIntegral screenWidth / fromIntegral n
+
+cellHeight :: Float
+cellHeight = fromIntegral screenHeight / fromIntegral n 
