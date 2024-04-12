@@ -16,9 +16,6 @@ boardGrid = pictures $ concatMap drawLines [0.0 .. fromIntegral n]
                   , line [(0.0, i * cellHeight), (fromIntegral screenWidth, i * cellHeight)]]
 
 -- CELL DRAWING
-cellToPicture :: Cell -> Picture
-cellToPicture Empty = Blank
-cellToPicture (Ocuppied val) = numberToPicture val
 
 drawCell :: (Int, Int) -> Cell -> Picture
 drawCell _ Empty = blank
