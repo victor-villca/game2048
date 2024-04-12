@@ -1,6 +1,7 @@
 module Logic where
 
 import Data.Array
+import Foreign.Marshal.Unsafe
 import Game
 import System.Random
 
@@ -13,30 +14,31 @@ createEmptyBoard n = array indexRange $ zip (range indexRange) (cycle [Empty])
 getEmptyCells :: Board -> [(Int, Int)]
 getEmptyCells board = filter (\coord -> board ! coord == Empty) (indices board)
 
-randomNumber :: Int -> Int -> IO Int
-randomNumber min max = randomRIO (min, max)
+randomNumber :: Int -> Int -> Int
+randomNumber min max = unsafeLocalState (randomRIO (min, max))
 
-getRandomCell :: [(Int, Int)] -> IO (Int, Int)
-getRandomCell [] = return (-1, -1)
-getRandomCell list = do
-    randomIndex <- randomNumber 0 (length list - 1)
-    return (list !! randomIndex)
+getRandomCell :: [(Int, Int)] -> (Int, Int)
+getRandomCell [] = (-1, -1)
+getRandomCell list = list !! randomNumber 0 (length list - 1)
 
-generateNumber :: IO Int
-generateNumber = do
-    rand <- randomNumber 1 10
-    if rand == 10
-        then return 4
-        else return 2
+getRandomNumber :: Int
+getRandomNumber 
+  | a == 1 = 4
+  | otherwise = 2
+  where
+    a = randomNumber 0 9
 
-generateRandomCell :: Board -> IO Board
-generateRandomCell board = do
-    number <- generateNumber
-    cell <- getRandomCell (getEmptyCells board)
-    return (board // [(cell, Ocuppied number)])
-    
+generateNumber :: Int
+generateNumber = getRandomNumber
+
+generateRandomCell :: Board -> Board
+generateRandomCell board = board // [(getRandomCell (getEmptyCells board), Ocuppied (getRandomNumber))]
+
+genBoard :: Int -> Board
+genBoard x = generateRandomCell (createEmptyBoard x)
+
 initialBoard :: Int -> Board
-initialBoard n = createEmptyBoard n // [((3, 3), (Ocuppied 1)), ((0, 0), (Ocuppied 2)) ]
+initialBoard x = generateRandomCell (genBoard x)
 
 transformGame :: a -> Game -> Game
 transformGame _ game = game
