@@ -21,11 +21,11 @@ cellToPicture Empty = Blank
 cellToPicture (Ocuppied val) = numberToPicture val
 
 drawCell :: (Int, Int) -> Cell -> Picture
-drawCell (x, y) Empty = blank
+drawCell _ Empty = blank
 drawCell (x, y) (Ocuppied value) = pictures [ coloredRectangle, translatedText ]
   where
     coloredRectangle = translate (fromIntegral x * cellWidth + cellWidth / 2) (fromIntegral y * cellHeight + cellHeight / 2) $ color red $ rectangleSolid cellWidth cellHeight
-    translatedText = translate (fromIntegral x * cellWidth + cellWidth / 2 -20) (fromIntegral y * cellHeight + cellHeight / 2 - 20) $ scale 0.5 0.5 $ boldText 1.4 $ color white $ text (show value)
+    translatedText = translate (fromIntegral x * cellWidth + cellWidth / 2 -20 ) (fromIntegral y * cellHeight + cellHeight / 2 -20) $ scale 0.5 0.5 $ boldText 1.4 $ color white $ text (show value)
 
 
 -- BOARD DRAWING
