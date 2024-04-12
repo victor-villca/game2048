@@ -14,6 +14,8 @@ createEmptyBoard n = array indexRange $ zip (range indexRange) (cycle [Empty])
   where
     indexRange = ((0, 0), (n - 1, n - 1))
 
+
+-- updates/overwritess the empty board to have tiles in specific posistions with //
 initialBoard :: Int -> Board
 initialBoard n = createEmptyBoard n // [((3, 3), (Ocuppied 1)), ((0, 0), (Ocuppied 2)), ((2, 1), (Ocuppied 4)), ((1, 0), (Ocuppied 6)) ]
 
@@ -44,13 +46,13 @@ performMove direction game = game { gameBoard = newBoard }
 moveBoard :: Direction -> Board -> Board
 moveBoard direction board = array ((0, 0), (n - 1, n - 1)) newCells
   where
-    rows = [[board ! (i, j) | j <- [0..n-1]] | i <- [0..n-1]]
+    rows = [[board ! (i, j) | j <- [0..n-1]] | i <- [0..n-1]] --List of rows where each row is  a list of the cells of the board
     newRows = case direction of
       TopMov -> map (reverse . shiftRow . reverse) rows
       DownMov -> map shiftRow rows
       LeftMov -> transpose $ map shiftRow $ transpose rows
       RightMov -> transpose $ map (reverse . shiftRow . reverse) $ transpose rows
-    newCells = [((i, j), newRows !! i !! j) | i <- [0..n-1], j <- [0..n-1]]
+    newCells = [((i, j), newRows !! i !! j) | i <- [0..n-1], j <- [0..n-1]] --We use !! cause we are indexing from a list, and we do it twice to ge the row and then the column
 
 
 transformGame :: Event -> Game -> Game
