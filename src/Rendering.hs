@@ -21,10 +21,10 @@ boardGrid = pictures $ concatMap drawLines [0.0 .. fromIntegral n]
 
 drawCell :: (Int, Int) -> Cell -> Picture
 drawCell _ Empty = blank
-drawCell (y, x) (Ocuppied value) = pictures [ coloredRectangle, translatedText ]
+drawCell (x, y) (Ocuppied value) = pictures [ coloredRectangle, translatedText ]
   where
-    coloredRectangle = translate (fromIntegral x * cellWidth + cellWidth / 2) (fromIntegral (n-y) * cellHeight - cellHeight / 2) $ color red $ rectangleSolid cellWidth cellHeight
-    translatedText = translate (fromIntegral x * cellWidth + cellWidth / 2 -20 ) (fromIntegral (n-y) * cellHeight - cellHeight / 2 -20) $ scale 0.5 0.5 $ boldText 1.4 $ color white $ text (show value)
+    coloredRectangle = translate (fromIntegral y * cellWidth + cellWidth / 2) (fromIntegral (n - x) * cellHeight - cellHeight / 2) $ color red $ rectangleSolid cellWidth cellHeight
+    translatedText = translate (fromIntegral y * cellWidth + cellWidth / 2 -20 ) (fromIntegral (n - x) * cellHeight - cellHeight / 2 -20) $ scale 0.5 0.5 $ boldText 1.4 $ color white $ text (show value)
 
 -- Iteratates throught the board to draw each cell and combines it with the board grid 
 -- as one single picture

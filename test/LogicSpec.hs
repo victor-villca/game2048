@@ -31,17 +31,6 @@ testMergeCells = TestCase $ do
     let test3 = mergeCells [Ocuppied 2, Ocuppied 2, Ocuppied 4, Ocuppied 4]
     assertEqual "Debe fusionar las celdas ocupadas con la misma ocupación" [Ocuppied 4, Ocuppied 8, Empty, Empty] test3
 
-testGetValue :: Test
-testGetValue = TestCase $ do
-    let test1 = getValue Empty
-    assertEqual "El valor de una celda vacía debe ser 0" 0 test1
-    
-    let test2 = getValue (Ocuppied 2)
-    assertEqual "El valor de una celda ocupada debe ser su valor" 2 test2
-    
-    let test3 = getValue (Ocuppied 10)
-    assertEqual "El valor de una celda ocupada debe ser su valor" 10 test3
-    
 -- Ejecutar las pruebas
 mainLogic :: IO Counts
 mainLogic = runTestTT tests

@@ -62,6 +62,14 @@ shiftRow row = filtered ++ padding
     filtered = filter (/= Empty) row
     padding = replicate (length row - length filtered) Empty
 
+mergeCells :: [Cell] -> [Cell]
+mergeCells [] = []
+mergeCells [x] = [x]
+mergeCells (Empty:xs) = mergeCells xs  -- Eliminar celdas vacías al principio de la lista
+mergeCells (x:Empty:xs) = mergeCells (x:xs)  -- Eliminar celdas vacías en el medio de la lista
+mergeCells (Ocuppied x:Ocuppied y:xs)
+  | x == y = Ocuppied (x + y) : mergeCells xs  -- Fusionar celdas iguales
+  | otherwise = Ocuppied x : mergeCells (Ocuppied y : xs)
 -- Performs a move in the game in a given direction
 -- The game board is updated based on it
 performMove :: Direction -> Game -> Game
@@ -74,6 +82,7 @@ performMove direction game = game { gameBoard = newBoard }
       LeftMov -> moveBoard LeftMov board
       RightMov -> moveBoard  RightMov board
     newBoard = generateRandomCell movedBoard
+
 
 -- Moves all cells in the board towards the specified direction
 -- Cells are shifted row by row or column by column, depending on the direction 
