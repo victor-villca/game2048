@@ -65,11 +65,14 @@ shiftRow row = filtered ++ padding
 mergeCells :: [Cell] -> [Cell]
 mergeCells [] = []
 mergeCells [x] = [x]
-mergeCells (Empty:xs) = mergeCells xs  -- Eliminar celdas vacías al principio de la lista
-mergeCells (x:Empty:xs) = mergeCells (x:xs)  -- Eliminar celdas vacías en el medio de la lista
-mergeCells (Ocuppied x:Ocuppied y:xs)
-  | x == y = Ocuppied (x + y) : mergeCells xs  -- Fusionar celdas iguales
-  | otherwise = Ocuppied x : mergeCells (Ocuppied y : xs)
+mergeCells (x:y:xs)
+  | x == y && x /= Empty = Ocuppied (getValue x + getValue y) : mergeCells xs
+  | otherwise = x : mergeCells (y:xs)
+
+getValue :: Cell -> Int
+getValue (Ocuppied value) = value
+getValue _ = 0
+
 -- Performs a move in the game in a given direction
 -- The game board is updated based on it
 performMove :: Direction -> Game -> Game
@@ -88,19 +91,21 @@ performMove direction game = game { gameBoard = newBoard }
 -- Cells are shifted row by row or column by column, depending on the direction 
 -- And a new boardis returned with the cellls shifted in the given directon
 moveBoard :: Direction -> Board -> Board
-moveBoard direction board = array ((0, 0), (n - 1, n - 1)) newCells
+moveBoard direction board = accumArray updateCell Empty ((0, 0), (n - 1, n - 1)) mergedCells
   where
-    rows = [[board ! (i, j) | j <- [0..n-1]] | i <- [0..n-1]] --List of rows where each row is  a list of the cells of the board
-    newRows = case direction of
-      TopMov -> transpose $ map shiftRow $ transpose rows
-      DownMov -> transpose $ map (reverse . shiftRow . reverse) $ transpose rows
-      LeftMov -> map shiftRow rows
-      RightMov -> map (reverse . shiftRow . reverse) rows
-    newCells = [((i, j), newRows !! i !! j) | i <- [0..n-1], j <- [0..n-1]] --We use !! cause we are indexing from a list, and we do it twice to ge the row and then the column
+    rows = [[board ! (i, j) | j <- [0..n-1]] | i <- [0..n-1]]
+    shiftedRows = case direction of
+      TopMov   -> map (mergeCells . shiftRow) rows
+      DownMov  -> map (reverse . mergeCells . shiftRow . reverse) rows
+      LeftMov  -> map (mergeCells . shiftRow) rows
+      RightMov -> map (reverse . mergeCells . shiftRow . reverse) rows
+    mergedCells = concat [zip [(i, j) | j <- [0..n-1]] row | (i, row) <- zip [0..] shiftedRows]
+    updateCell cell Empty = cell
+    updateCell _ (Ocuppied x) = Ocuppied x
 
 transformGame :: Event -> Game -> Game
 transformGame (EventKey (SpecialKey KeyUp) Up _ _) game = performMove TopMov game
 transformGame (EventKey (SpecialKey KeyDown) Up _ _) game = performMove DownMov game
-transformGame (EventKey (SpecialKey KeyLeft) Up _ _) game = performMove LeftMov game
-transformGame (EventKey (SpecialKey KeyRight) Up _ _) game = performMove RightMov game
+transformGame (EventKey (SpecialKey KeyLeft) Down _ _) game = performMove LeftMov game
+transformGame (EventKey (SpecialKey KeyRight) Down _ _) game = performMove RightMov game
 transformGame _ game = game
