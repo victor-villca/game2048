@@ -21,21 +21,19 @@ getRandomCell :: [(Int, Int)] -> (Int, Int)
 getRandomCell [] = (-1, -1)
 getRandomCell list = list !! randomNumber 0 (length list - 1)
 
-getRandomNumber :: Int
-getRandomNumber 
-  | a == 1 = 4
+getRandomNumber :: Int -> Int
+getRandomNumber a 
+  | a == 3 = 4
   | otherwise = 2
-  where
-    a = randomNumber 0 9
 
-generateRandomCell :: Board -> Board
-generateRandomCell board = board // [(getRandomCell (getEmptyCells board), Ocuppied getRandomNumber)]
+generateRandomCell :: Int -> Int -> Board -> Board
+generateRandomCell a b board = board // [(getRandomCell (getEmptyCells board), Ocuppied (getRandomNumber (randomNumber a b)))]
 
 genBoard :: Int -> Board
-genBoard x = generateRandomCell (createEmptyBoard x)
+genBoard x = generateRandomCell 0 9 (createEmptyBoard x)
 
 initialBoard :: Int -> Board
-initialBoard x = generateRandomCell (genBoard x)
+initialBoard x = generateRandomCell 1 10 (genBoard x)
 
 transformGame :: a -> Game -> Game
 transformGame _ game = game
