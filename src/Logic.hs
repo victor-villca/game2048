@@ -41,11 +41,13 @@ getRandomNumber1
     a = randomNumber1 1 10
 
 generateRandomCell :: Board -> Board
-generateRandomCell board = 
+generateRandomCell board 
   | getEmptyCells board /= [] = board // [(getRandomCell (getEmptyCells board), Ocuppied getRandomNumber)]
 
 generateRandomCell1 :: Board -> Board
-generateRandomCell1 board = board // [(getRandomCell (getEmptyCells board), Ocuppied getRandomNumber1)]
+generateRandomCell1 board 
+  | getEmptyCells board /= [] = board // [(getRandomCell (getEmptyCells board), Ocuppied getRandomNumber1)]
+
 genBoard :: Int -> Board
 genBoard x = generateRandomCell (createEmptyBoard x)
 
