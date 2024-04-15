@@ -106,6 +106,6 @@ moveBoard direction board = accumArray updateCell Empty ((0, 0), (n - 1, n - 1))
 transformGame :: Event -> Game -> Game
 transformGame (EventKey (SpecialKey KeyUp) Up _ _) game = performMove TopMov game
 transformGame (EventKey (SpecialKey KeyDown) Up _ _) game = performMove DownMov game
-transformGame (EventKey (SpecialKey KeyLeft) Down _ _) game = performMove LeftMov game
-transformGame (EventKey (SpecialKey KeyRight) Down _ _) game = performMove RightMov game
+transformGame (EventKey (SpecialKey KeyLeft) Up _ _) game = performMove LeftMov game
+transformGame (EventKey (SpecialKey KeyRight) Up _ _) game = performMove RightMov game
 transformGame _ game = game
