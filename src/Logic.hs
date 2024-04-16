@@ -82,7 +82,7 @@ moveBoard direction board = accumArray updateCell Empty ((0, 0), (n - 1, n - 1))
       TopMov   -> transpose $ map (mergeCells . shiftRow) $ transpose rows
       DownMov  -> transpose $ map (reverse . mergeCells . shiftRow . reverse) $ transpose rows
       LeftMov  -> map (mergeCells . shiftRow) rows
-      RightMov -> map (reverse . mergeCells . shiftRow . reverse) rows
+      RightMov -> map (reverse . mergeCells . shiftRow . reverse) rows  
     mergedCells = concat [zip [(i, j) | j <- [0..n-1]] row | (i, row) <- zip [0..] shiftedRows]
     updateCell cell Empty = cell
     updateCell _ (Ocuppied x) = Ocuppied x
