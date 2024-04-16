@@ -41,10 +41,10 @@ initialBoard x = generateRandomCell 1 10 (genBoard x)
 -- Shifts all the non empty cells in a row to the left
 -- Empty cells are moved to the right side of the row
 shiftRow :: [Cell] -> [Cell]
-shiftRow row = filtered ++ padding
+shiftRow row = mergeCells filtered ++ padding
   where
     filtered = filter (/= Empty) row
-    padding = replicate (length row - length filtered) Empty
+    padding = replicate (length row - length (mergeCells filtered)) Empty
 
 mergeCells :: [Cell] -> [Cell]
 mergeCells [] = []
@@ -79,10 +79,10 @@ moveBoard direction board = accumArray updateCell Empty ((0, 0), (n - 1, n - 1))
   where
     rows = [[board ! (i, j) | j <- [0..n-1]] | i <- [0..n-1]]
     shiftedRows = case direction of
-      TopMov   -> transpose $ map (mergeCells . shiftRow) $ transpose rows
-      DownMov  -> transpose $ map (reverse . mergeCells . shiftRow . reverse) $ transpose rows
-      LeftMov  -> map (mergeCells . shiftRow) rows
-      RightMov -> map (reverse . mergeCells . shiftRow . reverse) rows  
+      TopMov   -> transpose $ map shiftRow $ transpose rows
+      DownMov  -> transpose $ map (reverse . shiftRow . reverse) $ transpose rows
+      LeftMov  -> map shiftRow rows
+      RightMov -> map (reverse . shiftRow . reverse) rows  
     mergedCells = concat [zip [(i, j) | j <- [0..n-1]] row | (i, row) <- zip [0..] shiftedRows]
     updateCell cell Empty = cell
     updateCell _ (Ocuppied x) = Ocuppied x
