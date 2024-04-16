@@ -32,7 +32,6 @@ getRandomNumber a
 generateRandomCell :: Int -> Int -> Board -> Board
 generateRandomCell a b board = board // [(getRandomCell (getEmptyCells board), Ocuppied (getRandomNumber (randomNumber a b)))]
 
-
 genBoard :: Int -> Board
 genBoard x = generateRandomCell 0 9 (createEmptyBoard x)
 
