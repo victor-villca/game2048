@@ -8,6 +8,7 @@ data Cell = Empty | Ocuppied Int deriving (Eq,Show)
 
 type Board = Array (Int, Int) Cell 
 
+data Direction = TopMov | DownMov | LeftMov | RightMov deriving(Eq)
 data Game = Game {gameBoard :: Board,
                   gameState :: State  
                   } deriving (Eq)
