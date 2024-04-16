@@ -7,7 +7,7 @@ import Graphics.Gloss.Interface.Pure.Game
 import System.Random
 import Data.List (transpose)
 
--- Función para crear un nuevo tablero vacío
+-- Function to create a new empty board
 createEmptyBoard :: Int -> Board
 createEmptyBoard a = array indexRange $ zip (range indexRange) (cycle [Empty])
   where

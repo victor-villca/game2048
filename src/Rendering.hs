@@ -21,7 +21,7 @@ cellColor value = case value of
     2048 -> makeColorI 237 194 46 255    -- green
     _    -> makeColorI 205 193 180 255   -- default color (para cualquier otro valor)
 
--- Dibuja una celda con un color basado en su valor
+-- Draws a cell with a colour based on its value
 drawCell :: (Int, Int) -> Cell -> Picture
 drawCell _ Empty = blank
 drawCell (y, x) (Ocuppied value) = pictures [ coloredRectangle, translatedText ]
@@ -34,16 +34,16 @@ drawCell (y, x) (Ocuppied value) = pictures [ coloredRectangle, translatedText ]
 boardGridColor :: Color
 boardGridColor = makeColorI 0 0 0 255 
 
--- Combina todas las líneas del tablero en una sola imagen
--- donde drawLines genera un par de líneas para cada valor en la lista
+-- Combines all the lines on the board into a single image
+-- where drawLines generates a pair of lines for each value in the list
 boardGrid :: Picture
 boardGrid = pictures $ concatMap drawLines [0.0 .. fromIntegral n]
   where
     drawLines i = [ line [(i * cellWidth, 0.0), (i * cellWidth, fromIntegral screenHeight)]
                   , line [(0.0, i * cellHeight), (fromIntegral screenWidth, i *  cellHeight)]]
 
--- Itera por el tablero para dibujar cada celda y las combina con la cuadrícula del tablero
--- como una sola imagen
+-- rotate around the board to draw each cell and combine them with the grid on the board
+-- as a single image
 -- BOARD DRAWING
 boardAsRunningPicture :: Board -> Picture
 boardAsRunningPicture board = pictures [ color boardGridColor boardGrid, cellsPictures ]
