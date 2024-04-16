@@ -19,40 +19,24 @@ getEmptyCells board = filter (\coord -> board ! coord == Empty) (indices board)
 randomNumber :: Int -> Int -> Int
 randomNumber a b = unsafeLocalState (randomRIO (a, b))
 
-randomNumber1 :: Int -> Int -> Int
-randomNumber1 a b = unsafeLocalState (randomRIO (a, b))
 
 getRandomCell :: [(Int, Int)] -> (Int, Int)
 getRandomCell [] = (-1, -1)
 getRandomCell list = list !! randomNumber 0 (length list - 1)
 
-getRandomNumber :: Int
-getRandomNumber 
-  | a == 1 = 4
+getRandomNumber :: Int -> Int
+getRandomNumber a 
+  | a == 3 = 4
   | otherwise = 2
-  where
-    a = randomNumber 0 9
 
-getRandomNumber1 :: Int
-getRandomNumber1 
-  | a == 2 = 4
-  | otherwise = 2
-  where
-    a = randomNumber1 1 10
-
-generateRandomCell :: Board -> Board
-generateRandomCell board 
-  | getEmptyCells board /= [] = board // [(getRandomCell (getEmptyCells board), Ocuppied getRandomNumber)]
-
-generateRandomCell1 :: Board -> Board
-generateRandomCell1 board 
-  | getEmptyCells board /= [] = board // [(getRandomCell (getEmptyCells board), Ocuppied getRandomNumber1)]
+generateRandomCell :: Int -> Int -> Board -> Board
+generateRandomCell a b board = board // [(getRandomCell (getEmptyCells board), Ocuppied (getRandomNumber (randomNumber a b)))]
 
 genBoard :: Int -> Board
-genBoard x = generateRandomCell (createEmptyBoard x)
+genBoard x = generateRandomCell 0 9 (createEmptyBoard x)
 
 initialBoard :: Int -> Board
-initialBoard n = generateRandomCell1 (genBoard n)
+initialBoard x = generateRandomCell 1 10 (genBoard x)
 
 -- Shifts all the non empty cells in a row to the left
 -- Empty cells are moved to the right side of the row
@@ -84,7 +68,7 @@ performMove direction game = game { gameBoard = newBoard }
       DownMov -> moveBoard  DownMov board
       LeftMov -> moveBoard LeftMov board
       RightMov -> moveBoard  RightMov board
-    newBoard = generateRandomCell movedBoard
+    newBoard = generateRandomCell 0 9 movedBoard
 
 
 -- Moves all cells in the board towards the specified direction
