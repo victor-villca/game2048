@@ -12,7 +12,8 @@ backgroundColor = makeColor 255 255 255 255
 
 initialGame :: Game
 initialGame = Game {gameBoard = initialBoard n,
-                    gameState = Running
+                    gameState = Running,
+                    gameScore = 0
                     }
                     where indexRange = ((0, 0), (n - 1, n - 1))
 

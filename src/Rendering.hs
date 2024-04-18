@@ -51,6 +51,9 @@ boardAsRunningPicture board = pictures [ color boardGridColor boardGrid, cellsPi
     cellsPictures = pictures [ drawCell (x, y) cell | x <- [0..n-1], y <- [0..n-1], let cell = board ! (x, y) ]
 
 gameAsPicture :: Game -> Picture
-gameAsPicture game = translate (fromIntegral screenWidth * (-0.5)) (fromIntegral screenHeight * (-0.5)) frame
+gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (fromIntegral screenHeight * (-0.5)) frame
+                              , scoreText
+                              ]
   where
     frame = boardAsRunningPicture $ gameBoard game
+    scoreText = translate (-380) 280 $ scale 0.3 0.3 $ color black $ text ("Score: " ++ show (gameScore game))
