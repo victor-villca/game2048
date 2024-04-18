@@ -96,6 +96,8 @@ transformGame (EventKey (SpecialKey KeyUp) Up _ _) game = performMove TopMov gam
 transformGame (EventKey (SpecialKey KeyDown) Up _ _) game = performMove DownMov game
 transformGame (EventKey (SpecialKey KeyLeft) Up _ _) game = performMove LeftMov game
 transformGame (EventKey (SpecialKey KeyRight) Up _ _) game = performMove RightMov game
+transformGame (EventKey (Char 'r') Up _ _) game = reinitializeGame game
+
 transformGame _ game = game
 
 mergeBoard :: [[Cell]] -> ([[Cell]], Int)
@@ -116,3 +118,10 @@ merge cell d = (move, score)
       DownMov -> transpose $ map reverse newCells
       LeftMov -> newCells
       RightMov -> map reverse newCells
+
+
+
+reinitializeGame :: Game -> Game
+reinitializeGame game = game { gameBoard = newBoard }
+  where
+    newBoard = createEmptyBoard n
