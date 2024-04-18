@@ -14,3 +14,6 @@ boldText offset textPic = pictures
 -- Takes and int and returns a bold picture of it
 numberToPicture :: Int -> Picture
 numberToPicture n = translate (-20) (-20) . scale 0.5 0.5 . boldText 1 . text $ show n
+
+textToPicture :: String -> Picture
+textToPicture s = text $ s
