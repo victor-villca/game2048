@@ -6,6 +6,7 @@ import Foreign.Marshal.Unsafe
 import Game
 import Graphics.Gloss.Interface.Pure.Game
 import System.Random
+import System.Random (randomR)
 
 -- Function to create a new empty board
 createEmptyBoard :: Int -> Board
@@ -119,9 +120,28 @@ merge cell d = (move, score)
       LeftMov -> newCells
       RightMov -> map reverse newCells
 
-
-
 reinitializeGame :: Game -> Game
-reinitializeGame game = game { gameBoard = newBoard }
+reinitializeGame game = game { gameBoard = newBoard, gameStdGen = newStdGen, gameScore =0 }
   where
-    newBoard = createEmptyBoard n
+    emptyBoard = createEmptyBoard n
+    (newBoard, newStdGen) = generateTwoRandomCells (gameStdGen game) emptyBoard
+
+generateTwoRandomCells :: StdGen -> Board -> (Board, StdGen)
+generateTwoRandomCells gen board =
+  let (board1, gen1) = generateRandomCellStdGen gen board
+      (board2, gen2) = generateRandomCellStdGen gen1 board1
+  in (board2, gen2)
+
+generateRandomCellStdGen :: StdGen -> Board -> (Board, StdGen)
+generateRandomCellStdGen gen board = (board // [(randCellPos, Ocuppied randNumber)], newGen)
+  where
+    emptyCells = getEmptyCells board
+    (randCellPos, gen1) = randomElement gen emptyCells
+    (randVal, newGen) = randomR (0, 9) gen1 :: (Int, StdGen)
+    randNumber = if randVal == 0 then 4 else 2
+
+
+randomElement :: StdGen -> [a] -> (a, StdGen)
+randomElement gen list = (list !! index, newGen)
+  where
+    (index, newGen) = randomR (0, length list - 1) gen
