@@ -6,7 +6,7 @@ import Foreign.Marshal.Unsafe
 import Game
 import Graphics.Gloss.Interface.Pure.Game
 import System.Random
-import System.Random (randomR)
+import System.Random (randomR, mkStdGen)
 
 -- Function to create a new empty board
 createEmptyBoard :: Int -> Board
@@ -120,27 +120,32 @@ merge cell d = (move, score)
       LeftMov -> newCells
       RightMov -> map reverse newCells
 
+-- This function restarts the game board, score and random generator
 reinitializeGame :: Game -> Game
-reinitializeGame game = game { gameBoard = newBoard, gameStdGen = newStdGen, gameScore =0 }
+reinitializeGame game = game { gameBoard = newBoard, gameScore =0, gameStdGen = newStdGen }
   where
-    emptyBoard = createEmptyBoard n
-    (newBoard, newStdGen) = generateTwoRandomCells (gameStdGen game) emptyBoard
+    (newBoard, newStdGen) = generateTwoRandomCells (gameStdGen game) (createEmptyBoard n)
 
+
+-- This function returns a new Board with two random tiles and a new random generator
 generateTwoRandomCells :: StdGen -> Board -> (Board, StdGen)
-generateTwoRandomCells gen board =
-  let (board1, gen1) = generateRandomCellStdGen gen board
-      (board2, gen2) = generateRandomCellStdGen gen1 board1
-  in (board2, gen2)
+generateTwoRandomCells gen board =  (newBoard, newGen)
+  where
+    (boardAux, genAux) =  generateRandomCellStdGen gen board
+    (newBoard, newGen) =  generateRandomCellStdGen genAux boardAux
 
+
+-- This function returns a newBoard with a new random cell in an empty cell position and a new random generator
 generateRandomCellStdGen :: StdGen -> Board -> (Board, StdGen)
 generateRandomCellStdGen gen board = (board // [(randCellPos, Ocuppied randNumber)], newGen)
   where
     emptyCells = getEmptyCells board
     (randCellPos, gen1) = randomElement gen emptyCells
-    (randVal, newGen) = randomR (0, 9) gen1 :: (Int, StdGen)
-    randNumber = if randVal == 0 then 4 else 2
+    (randVal, newGen) = randomR (0, 9) gen1
+    randNumber = if (randVal :: Int) == 0 then getNextTile else getInitialTile
 
 
+-- This function returns you a random element from a given list and a new random generator
 randomElement :: StdGen -> [a] -> (a, StdGen)
 randomElement gen list = (list !! index, newGen)
   where

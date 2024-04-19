@@ -31,3 +31,9 @@ cellWidth = fromIntegral screenWidth / fromIntegral n
 
 cellHeight :: Float
 cellHeight = fromIntegral screenHeight / fromIntegral n 
+
+getInitialTile :: Int
+getInitialTile = 2
+
+getNextTile :: Int
+getNextTile = 4
