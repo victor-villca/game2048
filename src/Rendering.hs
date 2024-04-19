@@ -56,4 +56,4 @@ gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (f
                               ]
   where
     frame = boardAsRunningPicture $ gameBoard game
-    scoreText = translate (-380) 280 $ scale 0.3 0.3 $ color black $ text ("Score: " ++ show (gameScore game))
+    scoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.6)) $ scale 0.3 0.3 $ color black $ text ("Score: " ++ show (gameScore game))    
