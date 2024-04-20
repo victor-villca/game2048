@@ -3,7 +3,7 @@ import Graphics.Gloss
 import Game
 import Rendering
 import Logic
-import System.Random (StdGen, mkStdGen, randomR)
+import System.Random
 
 window :: Display
 window = InWindow "Game 2048" (1200, 900) (50, 50)

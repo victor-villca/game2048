@@ -1,4 +1,18 @@
-module Game where
+module Game (
+    State(..),
+    Cell(..),
+    Board,
+    Direction(..),
+    Game(..),
+    n,
+    stringGameOver,
+    cellWidth,
+    cellHeight,
+    getInitialTile,
+    getNextTile,
+    screenHeight,
+    screenWidth
+) where
 import System.Random (StdGen)
 
 
@@ -11,6 +25,7 @@ data Cell = Empty | Ocuppied Int deriving (Eq,Show)
 type Board = Array (Int, Int) Cell
 
 data Direction = TopMov | DownMov | LeftMov | RightMov deriving(Eq)
+
 data Game = Game {gameBoard :: Board,
                   gameState :: State,
                   gameScore :: Int,

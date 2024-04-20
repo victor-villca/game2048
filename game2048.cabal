@@ -26,7 +26,10 @@ source-repository head
 library
   exposed-modules:
       Game
+      GameOver
       Logic
+      Movement
+      Random
       Rendering
       Utils
   other-modules:
