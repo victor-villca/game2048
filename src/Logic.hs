@@ -6,6 +6,7 @@ import Foreign.Marshal.Unsafe
 import Game
 import Graphics.Gloss.Interface.Pure.Game
 import System.Random
+import System.Random (randomR, mkStdGen)
 
 -- Function to create a new empty board
 createEmptyBoard :: Int -> Board
@@ -99,6 +100,8 @@ transformGame (EventKey (SpecialKey KeyUp) Up _ _) game = performMove TopMov gam
 transformGame (EventKey (SpecialKey KeyDown) Up _ _) game = performMove DownMov game
 transformGame (EventKey (SpecialKey KeyLeft) Up _ _) game = performMove LeftMov game
 transformGame (EventKey (SpecialKey KeyRight) Up _ _) game = performMove RightMov game
+transformGame (EventKey (Char 'r') Up _ _) game = reinitializeGame game
+
 transformGame _ game = game
 
 mergeBoard :: [[Cell]] -> ([[Cell]], Int)
@@ -119,6 +122,38 @@ merge cell d = (move, score)
       DownMov -> transpose $ map reverse newCells
       LeftMov -> newCells
       RightMov -> map reverse newCells
+
+-- This function restarts the game board, score and random generator
+reinitializeGame :: Game -> Game
+reinitializeGame game = game { gameBoard = newBoard, gameScore =0, gameStdGen = newStdGen', gameState = Running }
+  where
+    (newBoard, newStdGen') = generateTwoRandomCells (gameStdGen game) (createEmptyBoard n)
+
+
+-- This function returns a new Board with two random tiles and a new random generator
+generateTwoRandomCells :: StdGen -> Board -> (Board, StdGen)
+generateTwoRandomCells gen board =  (newBoard, newGen)
+  where
+    (boardAux, genAux) =  generateRandomCellStdGen gen board
+    (newBoard, newGen) =  generateRandomCellStdGen genAux boardAux
+
+
+-- This function returns a newBoard with a new random cell in an empty cell position and a new random generator
+generateRandomCellStdGen :: StdGen -> Board -> (Board, StdGen)
+generateRandomCellStdGen gen board = (board // [(randCellPos, Ocuppied randNumber)], newGen)
+  where
+    emptyCells = getEmptyCells board
+    (randCellPos, gen1) = randomElement gen emptyCells
+    (randVal, newGen) = randomR (0, 9) gen1
+    randNumber = if (randVal :: Int) == 0 then getNextTile else getInitialTile
+
+
+-- This function returns you a random element from a given list and a new random generator
+randomElement :: StdGen -> [a] -> (a, StdGen)
+randomElement gen list = (list !! index', newGen)
+  where
+    (index', newGen) = randomR (0, length list - 1) gen
+
 verifyGameOver :: Board -> State
 verifyGameOver board
   | emptyCells == [] && noMergePossible = GameOver
