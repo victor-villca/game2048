@@ -50,10 +50,24 @@ boardAsRunningPicture board = pictures [ color boardGridColor boardGrid, cellsPi
   where
     cellsPictures = pictures [ drawCell (x, y) cell | x <- [0..n-1], y <- [0..n-1], let cell = board ! (x, y) ]
 
+gameOverMessage :: Picture
+gameOverMessage = pictures [translatedText]
+  where
+    translatedText = translate (0) (fromIntegral screenHeight +60) $ scale 0.5 0.5 $ boldText 1.4 $ color black $ text (stringGameOver)
+
+boardAsGameOverPicture :: Board -> Picture
+boardAsGameOverPicture board = pictures [ color boardGridColor boardGrid, cellsPictures, gameOverMessage]
+  where
+    cellsPictures = pictures [ drawCell (x, y) cell | x <- [0..n-1], y <- [0..n-1], let cell = board ! (x, y) ]
+
 gameAsPicture :: Game -> Picture
 gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (fromIntegral screenHeight * (-0.5)) frame
                               , scoreText
                               ]
   where
-    frame = boardAsRunningPicture $ gameBoard game
-    scoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.6)) $ scale 0.3 0.3 $ color black $ text ("Score: " ++ show (gameScore game))    
+    frameRunning = boardAsRunningPicture $ gameBoard game
+    frameOver = boardAsGameOverPicture $ gameBoard game
+    frame = case gameState game of
+      GameOver -> frameOver
+      Running -> frameRunning
+    scoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.6)) $ scale 0.3 0.3 $ color black $ text ("Score: " ++ show (gameScore game))
