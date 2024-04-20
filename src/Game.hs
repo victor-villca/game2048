@@ -20,6 +20,9 @@ data Game = Game {gameBoard :: Board,
 n :: Int 
 n = 4
 
+stringGameOver :: String
+stringGameOver = "Game Over"
+
 screenWidth :: Int
 screenWidth = 640
 

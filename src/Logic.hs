@@ -30,7 +30,9 @@ getRandomNumber a
   | otherwise = 2
 
 generateRandomCell :: Int -> Int -> Board -> Board
-generateRandomCell a b board = board // [(getRandomCell (getEmptyCells board), Ocuppied (getRandomNumber (randomNumber a b)))]
+generateRandomCell a b board
+  | getEmptyCells board /= [] = board // [(getRandomCell (getEmptyCells board), Ocuppied (getRandomNumber (randomNumber a b)))]
+  | otherwise = board
 
 genBoard :: Int -> Board
 genBoard x = generateRandomCell 0 9 (createEmptyBoard x)
@@ -64,7 +66,7 @@ getValue _ = 0
 -- Performs a move in the game in a given direction
 -- The game board is updated based on it
 performMove :: Direction -> Game -> Game
-performMove direction game = game {gameBoard = newBoard, gameScore = newScore}
+performMove direction game = game {gameBoard = newBoard, gameScore = newScore, gameState = newState}
   where
     board = gameBoard game
     (movedBoard, extraScore) = case direction of
@@ -74,6 +76,7 @@ performMove direction game = game {gameBoard = newBoard, gameScore = newScore}
       RightMov -> moveBoard RightMov board
     newBoard = generateRandomCell 0 9 movedBoard
     newScore = gameScore game + extraScore
+    newState = verifyGameOver newBoard
 
 -- Moves all cells in the board towards the specified direction
 -- Cells are shifted row by row or column by column, depending on the direction
@@ -122,9 +125,9 @@ merge cell d = (move, score)
 
 -- This function restarts the game board, score and random generator
 reinitializeGame :: Game -> Game
-reinitializeGame game = game { gameBoard = newBoard, gameScore =0, gameStdGen = newStdGen }
+reinitializeGame game = game { gameBoard = newBoard, gameScore =0, gameStdGen = newStdGen', gameState = Running }
   where
-    (newBoard, newStdGen) = generateTwoRandomCells (gameStdGen game) (createEmptyBoard n)
+    (newBoard, newStdGen') = generateTwoRandomCells (gameStdGen game) (createEmptyBoard n)
 
 
 -- This function returns a new Board with two random tiles and a new random generator
@@ -147,6 +150,30 @@ generateRandomCellStdGen gen board = (board // [(randCellPos, Ocuppied randNumbe
 
 -- This function returns you a random element from a given list and a new random generator
 randomElement :: StdGen -> [a] -> (a, StdGen)
-randomElement gen list = (list !! index, newGen)
+randomElement gen list = (list !! index', newGen)
   where
-    (index, newGen) = randomR (0, length list - 1) gen
+    (index', newGen) = randomR (0, length list - 1) gen
+
+verifyGameOver :: Board -> State
+verifyGameOver board
+  | emptyCells == [] && noMergePossible = GameOver
+  | otherwise = Running
+  where
+    emptyCells = getEmptyCells board
+    noMergePossible = not (any id (map (\index -> verifyDirections index board) (indices board)))
+
+verifyDirections :: (Int, Int) -> Board -> Bool
+verifyDirections index board = 
+  verifyUp index board || verifyDown index board || verifyLeft index board || verifyRight index board
+
+verifyUp :: (Int, Int) -> Board -> Bool
+verifyUp (x, y) board = x > 0 && board ! (x, y) == board ! (x-1, y)
+
+verifyDown :: (Int, Int) -> Board -> Bool
+verifyDown (x, y) board = x < n-1 && board ! (x, y) == board ! (x+1, y)
+
+verifyLeft :: (Int, Int) -> Board -> Bool
+verifyLeft (x, y) board = y > 0 && board ! (x, y) == board ! (x, y-1)
+
+verifyRight :: (Int, Int) -> Board -> Bool
+verifyRight (x, y) board = y < n-1 && board ! (x, y) == board ! (x, y+1)
