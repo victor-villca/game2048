@@ -53,7 +53,7 @@ getValue _ = 0
 -- Performs a move in the game in a given direction
 -- The game board is updated based on it
 performMove :: Direction -> Game -> Game
-performMove direction game = g
+performMove direction game = newGame
   where
     board = gameBoard game
     (movedBoard, extraScore) = case direction of
@@ -64,7 +64,7 @@ performMove direction game = g
     newBoard = generateRandomCell 0 9 movedBoard
     newScore = gameScore game + extraScore
     newState = verifyGameOver newBoard
-    g = calculateBestScore (game {gameBoard = newBoard, gameScore = newScore, gameState = newState})
+    newGame = calculateBestScore (game {gameBoard = newBoard, gameScore = newScore, gameState = newState})
 
 -- Moves all cells in the board towards the specified direction
 -- Cells are shifted row by row or column by column, depending on the direction
@@ -84,9 +84,9 @@ moveBoard direction board = (accumArray updateCell Empty ((0, 0), (n - 1, n - 1)
     updateCell _ (Ocuppied x) = Ocuppied x
 
 calculateBestScore :: Game -> Game
-calculateBestScore g
-  | btS < score = g {bestScore = score}
-  | otherwise = g
+calculateBestScore game
+  | bestS < score = game {bestScore = score}
+  | otherwise = game
   where
-    btS = bestScore g
-    score = gameScore g
+    bestS = bestScore game
+    score = gameScore game
