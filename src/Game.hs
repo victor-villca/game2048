@@ -31,6 +31,7 @@ data Direction = TopMov | DownMov | LeftMov | RightMov deriving(Eq)
 data Game = Game {gameBoard :: Board,
                   gameState :: State,
                   gameScore :: Int,
+                  bestScore :: Int,
                   gameStdGen :: StdGen
                   } deriving (Eq)
 
@@ -59,7 +60,7 @@ getNextTile :: Int
 getNextTile = 4
 
 winCellValue :: Int
-winCellValue = 16
+winCellValue = 2048
 
 --Method to see aall the cells of our game
 createFullBoard :: Board
