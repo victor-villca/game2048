@@ -48,6 +48,7 @@ boardAsGameOverPicture board = pictures [ color boardGridColor boardGrid, cellsP
 gameAsPicture :: Game -> Picture
 gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (fromIntegral screenHeight * (-0.5)) frame
                               , scoreText
+                              , winMessage
                               ]
   where
     frameRunning = boardAsRunningPicture $ gameBoard game
@@ -56,6 +57,11 @@ gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (f
       GameOver -> frameOver
       Running -> frameRunning
     scoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.6)) $ scale 0.3 0.3 $ color black $ text ("Score: " ++ show (gameScore game))
+    winMessage = if any (\(_, cell) -> case cell of Ocuppied value -> value == winCellValue; _ -> False) (assocs (gameBoard game))
+                    then translatedWinMessage
+                    else blank
+    translatedWinMessage = translate (-fromIntegral screenWidth * 0.5) (fromIntegral screenHeight * 0.6) $ scale 0.5 0.5 $ boldText 1.4 $ color black $ text ("You Win!")
+
 
 --Method to see all the board with all the cells of the game
 drawFullGame :: Picture

@@ -12,7 +12,8 @@ module Game (
     getNextTile,
     screenHeight,
     screenWidth,
-    createFullBoard
+    createFullBoard,
+    winCellValue
 ) where
 import System.Random (StdGen)
 
@@ -58,7 +59,7 @@ getNextTile :: Int
 getNextTile = 4
 
 winCellValue :: Int
-winCellValue = 2048
+winCellValue = 16
 
 --Method to see aall the cells of our game
 createFullBoard :: Board
