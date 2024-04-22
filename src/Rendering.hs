@@ -56,6 +56,7 @@ boardAsGameOverPicture board = pictures [ color boardGridColor boardGrid, cellsP
 gameAsPicture :: Game -> Picture
 gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (fromIntegral screenHeight * (-0.5)) frame
                               , scoreText
+                              , bestScoreText
                               ]
   where
     frameRunning = boardAsRunningPicture $ gameBoard game
@@ -64,7 +65,8 @@ gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (f
       GameOver -> frameOver
       Running -> frameRunning
     scoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.6)) $ scale 0.3 0.3 $ color black $ text ("Score: " ++ show (gameScore game))
+    bestScoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.7)) $ scale 0.3 0.3 $ color black $ text ("Best: " ++ show (bestScore game))
 
 --Method to see all the board with all the cells of the game
 drawFullGame :: Picture
-drawFullGame = gameAsPicture (Game createFullBoard Running 0 (mkStdGen 0))
+drawFullGame = gameAsPicture (Game createFullBoard Running 0 0 (mkStdGen 0))
