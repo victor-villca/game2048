@@ -33,19 +33,18 @@ textToPicture s = text $ s
 -- Asigna un color a cada valor de celda
 cellColor :: Int -> Color
 cellColor value = case value of
-    2    -> makeColorI 238 228 218 255   -- beige
-    4    -> makeColorI 237 224 200 255   -- light orange
-    8    -> makeColorI 242 177 121 255   -- orange
-    16   -> makeColorI 245 149 99 255    -- light red
-    32   -> makeColorI 246 124 95 255    -- red
-    64   -> makeColorI 246 94 59 255     -- strong red
-    128  -> makeColorI 237 207 114 255   -- light yellow
-    256  -> makeColorI 237 204 97 255    -- yellow
-    512  -> makeColorI 237 200 80 255    -- strong yellow
-    1024 -> makeColorI 237 197 63 255    -- light green
-    2048 -> makeColorI 237 194 46 255    -- green
-    _    -> makeColorI 205 193 180 255   -- default color (para cualquier otro valor)
-
+    2    -> makeColorI 134 228 249 255
+    4    -> makeColorI 81 195 211 255
+    8    -> makeColorI 23 147 187 255   
+    16   -> makeColorI 24 113 190 255    
+    32   -> makeColorI 98 111 196 255    
+    64   -> makeColorI 204 114 190 255     
+    128  -> makeColorI 255 137 162 255   
+    256  -> makeColorI 250 182 152 255   
+    512  -> makeColorI 239 133 112 255    
+    1024 -> makeColorI 254 117 75 255    
+    2048 -> makeColorI 245 98 98 255    
+    _    -> makeColorI 206 221 235 255  
 
     -- Function to create a new empty board
 createEmptyBoard :: Int -> Board

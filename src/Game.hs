@@ -11,7 +11,8 @@ module Game (
     getInitialTile,
     getNextTile,
     screenHeight,
-    screenWidth
+    screenWidth,
+    createFullBoard
 ) where
 import System.Random (StdGen)
 
@@ -56,3 +57,11 @@ getInitialTile = 2
 
 getNextTile :: Int
 getNextTile = 4
+
+winCellValue :: Int
+winCellValue = 2048
+
+--Method to see aall the cells of our game
+createFullBoard :: Board
+createFullBoard = array ((0, 0), (n - 1, n - 1)) $
+    [((i, j), if i * n + j + 1 <= 12 then Ocuppied (2 ^ (i * n + j)) else Empty) | i <- [0..n - 1], j <- [0..n - 1]]
