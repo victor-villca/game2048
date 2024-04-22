@@ -29,6 +29,7 @@ data Direction = TopMov | DownMov | LeftMov | RightMov deriving(Eq)
 data Game = Game {gameBoard :: Board,
                   gameState :: State,
                   gameScore :: Int,
+                  bestScore :: Int,
                   gameStdGen :: StdGen
                   } deriving (Eq)
 

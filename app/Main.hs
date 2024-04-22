@@ -15,6 +15,7 @@ initialGame :: Game
 initialGame = Game {gameBoard = initialBoard n,
                     gameState = Running,
                     gameScore = 0,
+                    bestScore = 0,
                     gameStdGen = mkStdGen 42
                     }
                     where indexRange = ((0, 0), (n - 1, n - 1))
