@@ -4,6 +4,8 @@ import Graphics.Gloss.Interface.Pure.Game
 import Random
 import Utils
 import Movement
+import Data.Array (elems)
+
 
 
 initialBoard :: Int -> Board
@@ -15,10 +17,21 @@ reinitializeGame game = game { gameBoard = newBoard, gameScore =0, gameStdGen = 
   where
     (newBoard, newStdGen') = generateTwoRandomCells (gameStdGen game) (createEmptyBoard n)
 
+isWinning :: Game -> Bool
+isWinning game = any (\cell -> case cell of Ocuppied value -> value == winCellValue; _ -> False) (elems (gameBoard game))
+
 transformGame :: Event -> Game -> Game
-transformGame (EventKey (SpecialKey KeyUp) Up _ _) game = performMove TopMov game
-transformGame (EventKey (SpecialKey KeyDown) Up _ _) game = performMove DownMov game
-transformGame (EventKey (SpecialKey KeyLeft) Up _ _) game = performMove LeftMov game
-transformGame (EventKey (SpecialKey KeyRight) Up _ _) game = performMove RightMov game
-transformGame (EventKey (Char 'r') Up _ _) game = reinitializeGame game
+transformGame (EventKey (SpecialKey KeyUp) Up _ _) game
+  | not (isWinning game) = performMove TopMov game
+  | otherwise = game
+transformGame (EventKey (SpecialKey KeyDown) Up _ _) game
+  | not (isWinning game) = performMove DownMov game
+  | otherwise = game
+transformGame (EventKey (SpecialKey KeyLeft) Up _ _) game
+  | not (isWinning game) = performMove LeftMov game
+  | otherwise = game
+transformGame (EventKey (SpecialKey KeyRight) Up _ _) game
+  | not (isWinning game) = performMove RightMov game
+  | otherwise = game
+transformGame (EventKey (Char 'r') Down _ _) game = reinitializeGame game
 transformGame _ game = game

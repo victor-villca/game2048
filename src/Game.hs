@@ -12,7 +12,8 @@ module Game (
     getNextTile,
     screenHeight,
     screenWidth,
-    createFullBoard
+    createFullBoard,
+    winCellValue
 ) where
 import System.Random (StdGen)
 
