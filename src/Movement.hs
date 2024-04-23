@@ -61,7 +61,7 @@ performMove direction game = newGame
       DownMov -> moveBoard DownMov board
       LeftMov -> moveBoard LeftMov board
       RightMov -> moveBoard RightMov board
-    newBoard = generateRandomCell 0 9 movedBoard
+    newBoard = if (movedBoard /= board) then generateRandomCell 0 9 movedBoard else movedBoard
     newScore = gameScore game + extraScore
     newState = verifyGameOver newBoard
     newGame = calculateBestScore (game {gameBoard = newBoard, gameScore = newScore, gameState = newState})
