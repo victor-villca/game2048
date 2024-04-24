@@ -69,6 +69,7 @@ gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (f
       GameOver -> frameOver
       Running -> frameRunning
     scoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.6)) $ scale 0.3 0.3 $ boldText 1.4 $ color black $ text ("Score: " ++ show (gameScore game))
+    winCellValue = winningValue game
     winMessage = if any (\(_, cell) -> case cell of Ocuppied value -> value == winCellValue; _ -> False) (assocs (gameBoard game))
                     then translatedWinMessage
                     else blank
@@ -91,4 +92,4 @@ gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (f
 
 --Method to see all the board with all the cells of the game
 drawFullGame :: Picture
-drawFullGame = gameAsPicture (Game createFullBoard Running 0 0 (mkStdGen 0))
+drawFullGame = gameAsPicture (Game createFullBoard Running 0 0 winning (mkStdGen 0))
