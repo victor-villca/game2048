@@ -8,15 +8,17 @@ import Game (createFullBoard, Game(..))
 
 
 boardGridColor :: Color
-boardGridColor = makeColorI 36 53 73 255 
+boardGridColor = makeColorI 36 53 73 255
 
 -- Draws a cell with a colour based on its value
 drawCell :: (Int, Int) -> Cell -> Picture
-drawCell _ Empty = blank
+drawCell (y, x) Empty = pictures [coloredEmpty]
+  where
+    coloredEmpty = translate (fromIntegral x * cellWidth + cellWidth / 2) (fromIntegral (n - y) * cellHeight - cellHeight / 2) $ color (cellColor 0) $ rectangleSolid (cellWidth - 10) (cellHeight - 10)
 drawCell (y, x) (Ocuppied value) = pictures [coloredRectangle, translatedText]
   where
     cellBackgroundColor = cellColor value
-    coloredRectangle = translate (fromIntegral x * cellWidth + cellWidth / 2) (fromIntegral (n - y) * cellHeight - cellHeight / 2) $ color cellBackgroundColor $ rectangleSolid cellWidth cellHeight
+    coloredRectangle = translate (fromIntegral x * cellWidth + cellWidth / 2) (fromIntegral (n - y) * cellHeight - cellHeight / 2) $ color cellBackgroundColor $ rectangleSolid (cellWidth - 10) (cellHeight - 10)
     translatedText = translateText (fromIntegral x * cellWidth + cellWidth / 2) (fromIntegral (n - y) * cellHeight - cellHeight / 2) value
 
 -- Auxiliar function to adjust the position of the text depends of the value
@@ -30,10 +32,11 @@ translateText xPos yPos value
 -- Combines all the lines on the board into a single image
 -- where drawLines generates a pair of lines for each value in the list
 boardGrid :: Picture
-boardGrid = pictures $ concatMap drawLines [0.0 .. fromIntegral n]
-  where
-    drawLines i = [ line [(i * cellWidth, 0.0), (i * cellWidth, fromIntegral screenHeight)]
-                  , line [(0.0, i * cellHeight), (fromIntegral screenWidth, i *  cellHeight)]]
+--boardGrid = pictures $ concatMap drawLines [0.0 .. fromIntegral n]
+  --where
+    --drawLines i = [ line [(i * cellWidth, 0.0), (i * cellWidth, fromIntegral screenHeight)]
+      --            , line [(0.0, i * cellHeight), (fromIntegral screenWidth, i *  cellHeight)]]
+boardGrid = translate (fromIntegral screenWidth / 2) (fromIntegral screenHeight / 2) $ color boardGridColor $ rectangleSolid (fromIntegral screenWidth + 10) (fromIntegral screenHeight + 10)
 
 -- rotate around the board to draw each cell and combine them with the grid on the board
 -- as a single image
