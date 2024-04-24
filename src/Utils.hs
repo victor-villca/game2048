@@ -44,7 +44,7 @@ cellColor value = case value of
     512  -> makeColorI 239 133 112 255    
     1024 -> makeColorI 254 117 75 255    
     2048 -> makeColorI 245 98 98 255    
-    _    -> makeColorI 206 221 235 255  
+    _    -> makeColorI 60 84 112 255  
 
     -- Function to create a new empty board
 createEmptyBoard :: Int -> Board
