@@ -13,7 +13,7 @@ module Game (
     screenHeight,
     screenWidth,
     createFullBoard,
-    winCellValue
+    winning
 ) where
 import System.Random (StdGen)
 
@@ -32,6 +32,7 @@ data Game = Game {gameBoard :: Board,
                   gameState :: State,
                   gameScore :: Int,
                   bestScore :: Int,
+                  winningValue :: Int,
                   gameStdGen :: StdGen
                   } deriving (Eq)
 
@@ -59,8 +60,8 @@ getInitialTile = 2
 getNextTile :: Int
 getNextTile = 4
 
-winCellValue :: Int
-winCellValue = 2048
+winning :: Int
+winning = 2048
 
 --Method to see aall the cells of our game
 createFullBoard :: Board
