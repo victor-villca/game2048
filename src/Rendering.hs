@@ -58,6 +58,9 @@ gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (f
                               , scoreText
                               , winMessage
                               , bestScoreText
+                              , instructionText
+                              , gameTitle
+                              , madeByText
                               ]
   where
     frameRunning = boardAsRunningPicture $ gameBoard game
@@ -65,14 +68,24 @@ gameAsPicture game = pictures [ translate (fromIntegral screenWidth * (-0.5)) (f
     frame = case gameState game of
       GameOver -> frameOver
       Running -> frameRunning
-    scoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.6)) $ scale 0.3 0.3 $ color black $ text ("Score: " ++ show (gameScore game))
+    scoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.6)) $ scale 0.3 0.3 $ boldText 1.4 $ color black $ text ("Score: " ++ show (gameScore game))
     winMessage = if any (\(_, cell) -> case cell of Ocuppied value -> value == winCellValue; _ -> False) (assocs (gameBoard game))
                     then translatedWinMessage
                     else blank
     translatedWinMessage = translate (-fromIntegral screenWidth * 0.5) (fromIntegral screenHeight * 0.6) $ scale 0.5 0.5 $ boldText 1.4 $ color black $ text ("You Win!")
 
-    bestScoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.7)) $ scale 0.3 0.3 $ color black $ text ("Best: " ++ show (bestScore game))
+    bestScoreText = translate (fromIntegral screenWidth * (0.2)) (fromIntegral screenHeight * (0.7)) $ scale 0.3 0.3 $ boldText 1.4 $ color black $ text ("Best Score: " ++ show (bestScore game))
 
+    instructionText = translate (-fromIntegral screenWidth * 0.5) (-fromIntegral screenHeight * 0.65) $ scale 0.2 0.2 $ color black $ pictures [
+      translate 0 80 $ boldText 1.4 $ text "You can move the pieces with the arrow keys.",
+      translate 0 (-80) $ boldText 1.4 $ text "The sum of two cells will be the assigned score.",
+      translate 0 (-240) $ boldText 1.4 $ text "To restart the game use the R key",
+      translate 0 (-400) $ boldText 1.4 $ text "The highest score remains while the app runs.",
+      translate 0 (-560) $ boldText 1.4 $ text "You can use the Esc key to exit the application."
+      ]
+
+    gameTitle = translate (fromIntegral screenWidth * (-1.2) - 100) (fromIntegral screenHeight * 0.8 - 50) $ scale 1 1 $ boldText 1.4 $ color black $ text "2048"
+    madeByText = translate (fromIntegral screenWidth * (-1.2) - 100) (fromIntegral screenHeight * 0.8 - 100) $ scale 0.3 0.3 $ boldText 1.4 $ color black $ text "Made by [A elegir]"
 --Method to see all the board with all the cells of the game
 drawFullGame :: Picture
 drawFullGame = gameAsPicture (Game createFullBoard Running 0 0 (mkStdGen 0))

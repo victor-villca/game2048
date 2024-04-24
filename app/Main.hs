@@ -8,10 +8,11 @@ import Rendering (drawFullGame)
 
 
 window :: Display
-window = InWindow "Game 2048" (1200, 900) (50, 50)
+window = FullScreen
 
 backgroundColor :: Color
-backgroundColor = makeColor 255 255 255 255
+backgroundColor = makeColorI 206 233 235 181
+
 
 initialGame :: Game
 initialGame = Game {gameBoard = initialBoard n,
